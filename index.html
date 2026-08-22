@@ -1,0 +1,415 @@
+<title>Balance</title>
+<meta name="description" content="A shared planner for the people you live with. Privacy policy, terms, and how to reach us.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  /* Balance's own faces, subset to Latin-1 plus the punctuation this page
+     actually uses — 150KB for all four instead of 1.2MB. Regenerate with
+     site/subset_fonts.sh if the app's fonts ever change. */
+  @font-face {
+    font-family: "EB Garamond"; src: url("fonts/EBGaramond-Regular.ttf") format("truetype");
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: "EB Garamond"; src: url("fonts/EBGaramond-SemiBold.ttf") format("truetype");
+    font-weight: 600; font-display: swap;
+  }
+  @font-face {
+    font-family: "Manrope"; src: url("fonts/Manrope-Regular.ttf") format("truetype");
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: "Manrope"; src: url("fonts/Manrope-SemiBold.ttf") format("truetype");
+    font-weight: 600; font-display: swap;
+  }
+
+  /* Light is the full palette; the two blocks after it redefine only tokens. */
+  :root {
+    --paper:      #FBF9FC;
+    --raised:     #FFFFFF;
+    --ink:        #241B2B;
+    --muted:      #6E6377;   /* warm grey pulled toward the accent, not a default grey */
+    --faint:      #E6DEEC;
+    --accent:     #C38BE3;   /* the app's orchid — fills, rules, marks */
+    --accent-ink: #6B4189;   /* the same hue dark enough to read as words */
+    --accent-bg:  rgba(195, 139, 227, 0.10);
+    --shadow:     0 1px 2px rgba(36, 27, 43, 0.05), 0 8px 24px rgba(36, 27, 43, 0.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #16121A;
+      --raised:     #1E1924;
+      --ink:        #EDE7F2;
+      --muted:      #A196AC;
+      --faint:      #322A3A;
+      --accent:     #C38BE3;
+      --accent-ink: #D9B6F0;
+      --accent-bg:  rgba(195, 139, 227, 0.13);
+      --shadow:     0 1px 2px rgba(0, 0, 0, 0.30), 0 8px 24px rgba(0, 0, 0, 0.22);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:      #16121A;
+    --raised:     #1E1924;
+    --ink:        #EDE7F2;
+    --muted:      #A196AC;
+    --faint:      #322A3A;
+    --accent:     #C38BE3;
+    --accent-ink: #D9B6F0;
+    --accent-bg:  rgba(195, 139, 227, 0.13);
+    --shadow:     0 1px 2px rgba(0, 0, 0, 0.30), 0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16.5px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page { max-width: 44rem; margin: 0 auto; padding: 0 1.5rem 6rem; }
+
+  /* ── Masthead ───────────────────────────────────────────────────────── */
+  header.masthead { padding: 4.5rem 0 2.5rem; }
+
+  .wordmark {
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: clamp(2.9rem, 9vw, 4rem);
+    font-weight: 400;
+    letter-spacing: -0.012em;
+    line-height: 1;
+    margin: 0;
+  }
+  .wordmark .dot { color: var(--accent); }
+
+  .standfirst {
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: clamp(1.25rem, 3.4vw, 1.5rem);
+    line-height: 1.45;
+    color: var(--muted);
+    margin: 1rem 0 0;
+    max-width: 30ch;
+    text-wrap: balance;
+  }
+
+  .badge {
+    display: inline-block;
+    margin-top: 1.75rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: var(--accent-bg);
+    color: var(--accent-ink);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  /* ── Sections ───────────────────────────────────────────────────────── */
+  section { padding-top: 3.25rem; scroll-margin-top: 1.5rem; }
+
+  /* The one decorative move on the page, and it is a quotation: a thin orchid
+     rule is what the app draws across a calendar day. */
+  h2 {
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 1.85rem;
+    font-weight: 600;
+    letter-spacing: -0.006em;
+    margin: 0 0 0.35rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--accent);
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: 0.79rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2rem 0 0.4rem;
+  }
+
+  .dateline {
+    font-size: 0.86rem;
+    color: var(--muted);
+    margin: 0 0 1.5rem;
+  }
+
+  p { margin: 0 0 1rem; }
+  p:last-child { margin-bottom: 0; }
+
+  a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+  ul { margin: 0 0 1rem; padding-left: 1.15rem; }
+  li { margin-bottom: 0.4rem; }
+  li::marker { color: var(--accent); }
+
+  strong { font-weight: 600; }
+
+  /* ── The plain-English summary, and the "what it does" list ─────────── */
+  .card {
+    background: var(--raised);
+    border: 1px solid var(--faint);
+    border-radius: 14px;
+    padding: 1.4rem 1.5rem;
+    box-shadow: var(--shadow);
+    margin: 1.25rem 0 0;
+  }
+  .card h3 { margin-top: 0; }
+
+  .does { list-style: none; padding: 0; margin: 1.25rem 0 0; }
+  .does li {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 9rem) 1fr;
+    gap: 0.4rem 1.1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--faint);
+    margin: 0;
+  }
+  .does li:last-child { border-bottom: 0; }
+  .does dt, .does .what {
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 1.14rem;
+    color: var(--accent-ink);
+  }
+  .does .how { color: var(--muted); }
+  @media (max-width: 34rem) {
+    .does li { grid-template-columns: 1fr; gap: 0.1rem; }
+  }
+
+  /* ── Contact ────────────────────────────────────────────────────────── */
+  .contact-mail {
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: clamp(1.4rem, 5vw, 1.9rem);
+    display: inline-block;
+    margin-top: 0.35rem;
+    word-break: break-word;
+  }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--faint);
+    color: var(--muted);
+    font-size: 0.86rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    justify-content: space-between;
+  }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <h1 class="wordmark">Balance<span class="dot">.</span></h1>
+    <p class="standfirst">A shared planner for the people you live with.</p>
+    <span class="badge">Private beta</span>
+  </header>
+
+  <section id="what">
+    <h2>What it is</h2>
+    <p>
+      Balance holds the parts of a household that two people have to keep in step: what needs
+      doing, what is already in the diary, what the house needs, and where the important
+      documents are. One place, both phones, the Mac, kept in sync.
+    </p>
+
+    <ul class="does">
+      <li><span class="what">Calendar</span><span class="how">Your real diary. Connect Google, and the calendars already on your phone appear beside it.</span></li>
+      <li><span class="what">Tasks</span><span class="how">With who's doing them, how long they take, and what repeats.</span></li>
+      <li><span class="what">A daily plan</span><span class="how">Today's work laid into the gaps between your appointments. Worked out on your device — nothing is sent to an AI to make it.</span></li>
+      <li><span class="what">Groceries</span><span class="how">A list that learns the rhythm of what you actually buy, and never changes it without asking.</span></li>
+      <li><span class="what">Notes &amp; documents</span><span class="how">Written, scanned or brought in from Notion. Shareable by link when you want them to be.</span></li>
+      <li><span class="what">A vault</span><span class="how">Passwords, policies, account numbers — encrypted on your device before it ever leaves.</span></li>
+    </ul>
+  </section>
+
+  <section id="privacy">
+    <h2>Privacy</h2>
+    <p class="dateline">Last updated 22 August 2026</p>
+
+    <div class="card">
+      <h3>The short version</h3>
+      <p>
+        Balance keeps your household's information so your household can use it. That is the
+        whole purpose. There is no advertising, no analytics, no tracking, nothing is sold or
+        shared for marketing, and nothing you write is used to train an AI model. You can delete
+        everything from inside the app, and when you do, it is gone.
+      </p>
+    </div>
+
+    <h3>What Balance stores</h3>
+    <ul>
+      <li>Your name and the account identifier Sign in with Apple gives us. Apple lets you hide your real email address, and Balance works perfectly well if you do.</li>
+      <li>Everything you put into the app: tasks, notes, documents, photos you attach, shopping lists, the things you own, and the household you belong to.</li>
+      <li>A copy of the calendar events Balance needs to plan around — see below.</li>
+      <li>Device tokens, so notifications can reach your phone, and nothing else about your device.</li>
+    </ul>
+
+    <h3>What it does not do</h3>
+    <ul>
+      <li>No advertising, and no advertising identifiers.</li>
+      <li>No analytics or usage tracking of any kind. Nobody is watching which screens you open.</li>
+      <li>Your information is never sold, rented, or shared with anyone for their own purposes.</li>
+      <li>Nothing you write is used to train an AI model — not ours, not anybody's.</li>
+      <li>Balance's daily plan is worked out on your own device. It is arithmetic, not artificial intelligence, and your day is not sent anywhere to produce it.</li>
+    </ul>
+
+    <h3>Your calendar</h3>
+    <p>
+      If you connect Google Calendar, Balance asks for permission to read your events and to
+      create the ones you make in Balance. It keeps the times and titles it needs to show your
+      day and plan around it. If you also point Balance at a Google Drive folder, it reads only
+      the folder you choose. You can disconnect at any time in Settings, which deletes the
+      connection and hands the access back to Google. Calendars already on your Apple device are
+      read on the device itself.
+    </p>
+    <p>
+      Balance's use of information received from Google APIs follows the
+      <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+      including its Limited Use requirements.
+    </p>
+
+    <h3>The vault</h3>
+    <p>
+      Anything you put in the vault is encrypted on your own device, with a key derived from
+      your passphrase, before it is uploaded. What is stored is unreadable without that
+      passphrase — including to us. That also means we cannot recover it for you if you forget
+      it, which is the trade you are making and the reason the app says so before you start.
+    </p>
+
+    <h3>Who else is involved</h3>
+    <ul>
+      <li><strong>Supabase</strong> — the database and file storage that hold your household's information, hosted in the United States (Northern California).</li>
+      <li><strong>Apple</strong> — Sign in with Apple, and the delivery of notifications to your devices.</li>
+      <li><strong>Google</strong> — only if you connect a Google account, and only for the calendars and the one Drive folder you choose.</li>
+      <li><strong>Notion</strong> — only if you use "move in from Notion", and only to read the pages you pick.</li>
+    </ul>
+    <p>
+      Each of these holds information because Balance needs them to work. None of them is given
+      anything for their own purposes.
+    </p>
+
+    <h3>How long it is kept</h3>
+    <p>
+      Until you delete it. Deleting a note deletes it; deleting your account deletes your
+      account. If you are the only person left in your household, deleting your account deletes
+      the household and everything in it as well — the app tells you which of those two things is
+      about to happen before you confirm.
+    </p>
+
+    <h3>Deleting everything</h3>
+    <p>
+      In the app: <strong>Settings → About → Delete your account</strong>. It happens
+      immediately and it cannot be undone. If you would rather ask us to do it, use
+      <a href="#support">any of the routes below</a> and we will.
+    </p>
+
+    <h3>Children</h3>
+    <p>
+      Balance is made for adults running a household and is not directed at children under 13.
+      We do not knowingly collect information from them.
+    </p>
+
+    <h3>Changes</h3>
+    <p>
+      If this policy changes in a way that matters, the date at the top changes and the app will
+      say so. It will not change retroactively for information already collected.
+    </p>
+  </section>
+
+  <section id="terms">
+    <h2>Terms of use</h2>
+    <p class="dateline">Last updated 22 August 2026</p>
+
+    <h3>This is a beta</h3>
+    <p>
+      Balance is unfinished software being tested by a small number of households. It will have
+      bugs. Features will change and some will be removed. Please keep your own copy of anything
+      you could not stand to lose, and do not rely on Balance alone for something with real
+      consequences — a medication schedule, a legal deadline, a flight.
+    </p>
+
+    <h3>Your account</h3>
+    <p>
+      One account, one person, and you are responsible for what happens under it. Everyone in a
+      household can see and change everything in that household — that is the point of it — so
+      only invite people you mean to share your life with.
+    </p>
+
+    <h3>What you write is yours</h3>
+    <p>
+      Your content belongs to you. You give us only the permission needed to store it, sync it
+      between your devices, and show it to the people in your household. Nothing more, and
+      nothing after you delete it.
+    </p>
+
+    <h3>Using it reasonably</h3>
+    <p>
+      Don't use Balance to break the law, to store other people's information without their
+      knowing, or to attack the service. Don't try to get at other households' data.
+    </p>
+
+    <h3>No promises, and no liability</h3>
+    <p>
+      Balance is provided as it is, without warranty of any kind. It may be unavailable, it may
+      lose data, and it may be discontinued. To the fullest extent the law allows, we are not
+      liable for any loss arising from using it. Nothing here limits liability that cannot be
+      limited by law.
+    </p>
+
+    <h3>Ending it</h3>
+    <p>
+      You can delete your account at any time, from inside the app. We can end access to the
+      beta — with notice where we reasonably can, and immediately where the terms above are
+      being broken.
+    </p>
+
+    <h3>Where this applies</h3>
+    <p>
+      These terms are governed by the laws of the State of Arizona, United States.
+    </p>
+  </section>
+
+  <section id="support">
+    <h2>Getting in touch</h2>
+    <p>
+      Questions, problems, a request to delete your information, or a feature you wish existed —
+      a real person reads all of it.
+    </p>
+
+    <div class="card">
+      <h3>From inside Balance</h3>
+      <p>
+        <strong>Settings → Tell us something.</strong> This is the fastest route and the one to
+        use if you can: it sends your build number along, which usually saves a round of
+        questions about which copy of the app you are looking at.
+      </p>
+    </div>
+
+    <!-- The email address lands here when the domain does. Until then this
+         section must not print a placeholder or an address nobody reads — an
+         unanswered support address is worse than an honest absence. See
+         site/README.md. -->
+    <p style="margin-top:1.25rem">
+      If you cannot reach the app — you have been locked out, or you have already deleted it —
+      write to whoever invited you to the beta and they will pass it on. A permanent support
+      address is being set up and will appear here.
+    </p>
+  </section>
+
+  <footer>
+    <span>Balance — a shared planner for the people you live with.</span>
+    <span>Made by Billy Attridge.</span>
+  </footer>
+
+</div>
