@@ -228,14 +228,14 @@
       <li><span class="what">Tasks</span><span class="how">With who's doing them, how long they take, and what repeats.</span></li>
       <li><span class="what">A daily plan</span><span class="how">Today's work laid into the gaps between your appointments. Worked out on your device — nothing is sent to an AI to make it.</span></li>
       <li><span class="what">Groceries</span><span class="how">A list that learns the rhythm of what you actually buy, and never changes it without asking.</span></li>
-      <li><span class="what">Notes &amp; documents</span><span class="how">Written, scanned or brought in from Notion. Shareable by link when you want them to be.</span></li>
+      <li><span class="what">Notes &amp; documents</span><span class="how">Written, scanned, or brought in from Google Drive and Apple Notes. Shareable by link when you want them to be.</span></li>
       <li><span class="what">A vault</span><span class="how">Passwords, policies, account numbers — encrypted on your device before it ever leaves.</span></li>
     </ul>
   </section>
 
   <section id="privacy">
     <h2>Privacy</h2>
-    <p class="dateline">Last updated 22 August 2026</p>
+    <p class="dateline">Last updated 31 August 2026</p>
 
     <div class="card">
       <h3>The short version</h3>
@@ -292,12 +292,25 @@
       <li><strong>Supabase</strong> — the database and file storage that hold your household's information, hosted in the United States (Northern California).</li>
       <li><strong>Apple</strong> — Sign in with Apple, and the delivery of notifications to your devices.</li>
       <li><strong>Google</strong> — only if you connect a Google account, and only for the calendars and the one Drive folder you choose.</li>
-      <li><strong>Notion</strong> — only if you use "move in from Notion", and only to read the pages you pick.</li>
     </ul>
     <p>
       Each of these holds information because Balance needs them to work. None of them is given
       anything for their own purposes.
     </p>
+
+    <h3>How your information is protected</h3>
+    <ul>
+      <li><strong>In transit.</strong> Everything that moves between the app, Balance's servers, Apple and Google travels over an encrypted connection (HTTPS, TLS 1.2 or better). There is no unencrypted route in or out.</li>
+      <li><strong>At rest.</strong> The database and the files you upload are encrypted on disk (AES-256) by Supabase, our hosting provider.</li>
+      <li><strong>Kept apart.</strong> Every table enforces row-level security, so a request can only ever return rows belonging to the signed-in person and their household. The database itself checks this on every single query, so a mistake in the app cannot hand one household another household's information.</li>
+      <li><strong>Your Google connection.</strong> The token that lets Balance reach your Google Calendar is stored where no signed-in account can read it &mdash; including your own. The database grants read access to it only to Balance's own server-side functions, and it is deleted the moment you disconnect the account or delete your Balance account. From your calendar Balance keeps only what it needs to show and plan your day: the title, the start and the end. If you point Balance at a Google Drive folder, it reads only that one folder, only when you ask, and only to bring those documents into your notes.</li>
+      <li><strong>Limited use.</strong> Information received from Google APIs is never used for advertising, never sold or transferred, and never used to train an AI model. Balance's use of it follows the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</li>
+      <li><strong>Signing in.</strong> Balance uses Sign in with Apple and never sees, handles, or stores a password.</li>
+      <li><strong>The vault.</strong> Encrypted on your own device with a key derived from your passphrase, before it is uploaded &mdash; unreadable to anyone without that passphrase, including us.</li>
+      <li><strong>Keys and credentials.</strong> The credentials Balance uses to talk to Google and Apple live in a server-side secret store. They are never shipped inside the app on your device and never written into the source code.</li>
+      <li><strong>People.</strong> Administrative access to the production systems is limited to the people who operate Balance, protected by two-factor authentication, and used only to keep the service running or to answer a request from you.</li>
+      <li><strong>Keeping it that way.</strong> Permissions and access rules are reviewed before each release and the software Balance depends on is kept up to date. If we ever find that information has been exposed, we will tell the people affected promptly, by email and in the app.</li>
+    </ul>
 
     <h3>How long it is kept</h3>
     <p>
